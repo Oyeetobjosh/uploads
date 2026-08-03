@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // NOTE on current limits: the app tracks job ownership by `postedBy` /
+    // `hiredProvider` USERNAME strings, not Firebase Auth uid, and there is
+    // no server-side mapping from uid -> username yet. That means these
+    // rules can only require "you must be signed in" for jobs, not "you
+    // must be the actual owner" — a signed-in user could still edit a job
+    // they don't own by hitting Firestore directly (not through the UI).
+    // This closes the "wide open to the entire internet, no login needed"
+    // hole, but real per-owner enforcement needs auth uid stored on the
+    // job/user documents. See conversation notes for the recommended fix.
+    match /jobs/{jobId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Everything else: deny by default. Add explicit matches here as new
+    // collections (users, transactions, chats, etc.) move from localStorage
+    // into Firestore.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
