@@ -14,7 +14,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 FR = os.path.join(BASE, "frames")
 os.makedirs(FR, exist_ok=True)
 
-W, H, FPS, DUR = 1280, 720, 25, 15
+W, H, FPS, DUR = 1280, 720, 25, 20
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 C_TURTLE = (146, 94, 48); C_TURTLE_DARK = (90, 58, 26)
 C_TURTLE_PAT = (176, 124, 70)
